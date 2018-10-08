@@ -32,6 +32,8 @@ class ClientConnector
     {
         $this->segmentId = $clientId;
         $this->clientConnection = new \CS_REST_Clients($clientId, $authentication->getDetails());
+        $this->listConnection = new \CS_REST_Lists($clientId, $authentication->getDetails());
+        $this->clientId = $clientId;
     }
 
     /**
@@ -41,6 +43,41 @@ class ClientConnector
     {
         return new Response($this->clientConnection->get());
     }
+
+    /**
+     * @param $title
+     * @param null $unsubscribePage
+     * @param string $unsubscribeSetting
+     * @param bool $confirmedOptIn
+     * @param null $confirmationSuccessPage
+     * @return Response
+     */
+    public function addList(
+        $title,
+        $unsubscribePage = null,
+        $unsubscribeSetting = 'AllClientLists',
+        $confirmedOptIn = false,
+        $confirmationSuccessPage = null
+    ){
+        $listDetails = [
+            'Title' => $title,
+            'UnsubscribeSetting' => $unsubscribeSetting,
+            'ConfirmedOptIn' => $confirmedOptIn
+        ];
+
+        if($unsubscribePage != null){
+            $listDetails['UnsubscribePage'] = $unsubscribePage;
+        }
+
+        if($confirmationSuccessPage != null){
+            $listDetails['ConfirmationSuccessPage'] = $confirmationSuccessPage;
+        }
+
+        $result = $this->listConnection->create($this->clientId, $listDetails);
+        return new Response($result);
+
+    }
+
 
     /**
      * @return ListReference[]|ArrayCollection
