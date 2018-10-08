@@ -410,6 +410,29 @@ class ListConnector
         return new Response($this->listConnection->get_segments());
     }
 
+
+    public function addCustomField(
+        $fieldname,
+        $dataType = 'Text',
+        $options = null,
+        $visibleInPreferenceCenter = true
+    ) {
+        $customFieldDetails = [
+            'FieldName' => $fieldname,
+            'DataType' => $dataType,
+            'VisibleInPreferenceCenter' => $visibleInPreferenceCenter
+        ];
+
+        if ($options !== null) {
+            $customFieldDetails['Options'] = $options;
+        }
+
+        $result = $this->listConnection->create_custom_field($customFieldDetails);
+
+        return new Response($result);
+    }
+
+
     /**
      * @return Response
      */
@@ -417,4 +440,7 @@ class ListConnector
     {
         return new Response($this->listConnection->get_custom_fields());
     }
+
+
+
 }
