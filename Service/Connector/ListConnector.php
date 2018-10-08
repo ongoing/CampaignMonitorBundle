@@ -30,6 +30,12 @@ class ListConnector
     private $listConnection;
 
     /**
+     * @var \CS_REST_Segments
+     */
+    private $segmentConnection;
+
+
+    /**
      * @param Authentication $authentication
      * @param string $listId
      */
@@ -38,6 +44,7 @@ class ListConnector
         $this->listId = $listId;
         $this->subscribersConnection = new \CS_REST_Subscribers($listId, $authentication->getDetails());
         $this->listConnection = new \CS_REST_Lists($listId, $authentication->getDetails());
+        $this->segmentConnection = new \CS_REST_Segments($listId, $authentication->getDetails());
     }
 
     /**
@@ -374,6 +381,26 @@ class ListConnector
     {
         return new Response($this->listConnection->activate_webhook($webHookId));
     }
+
+    /**
+     * @param $title
+     * @param array $ruleGroups
+     * @return Response
+     */
+    public function addSegment(
+        $title,
+        $ruleGroups = []
+    ){
+        $segmentDetails =
+            [
+                'Title' => $title,
+                'RuleGroups' => $ruleGroups
+            ];
+
+        $result = $this->segmentConnection->create($this->listId, $segmentDetails);
+        return new Response($result);
+    }
+
 
     /**
      * @return Response
