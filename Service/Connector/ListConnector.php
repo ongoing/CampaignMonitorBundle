@@ -441,6 +441,43 @@ class ListConnector
         return new Response($this->listConnection->get_custom_fields());
     }
 
+    /**
+     * @param $fieldKey
+     * @param $fieldName
+     * @param string $dataType
+     * @param null $options
+     * @param bool $visibleInPreferenceCenter
+     * @return Response
+     */
+    public function updateCustomField(
+        $fieldKey,
+        $fieldName,
+        $dataType = 'Text',
+        $visibleInPreferenceCenter = true
+    ) {
+        $customFieldDetails = [
+            'FieldName' => $fieldName,
+            'DataType' => $dataType,
+            'VisibleInPreferenceCenter' => $visibleInPreferenceCenter
+        ];
 
+        $result = $this->listConnection->update_custom_field($fieldKey, $customFieldDetails);
+        return new Response($result);
+    }
+
+    /**
+     * @param $fieldKey
+     * @param $options
+     * @param bool $keepExistingOptions
+     * @return Response
+     */
+    public function updateCustomFieldOptions(
+        $fieldKey,
+        $options,
+        $keepExistingOptions = true
+    ) {
+        $result = $this->listConnection->update_field_options($fieldKey, $options, $keepExistingOptions);
+        return new Response($result);
+    }
 
 }
